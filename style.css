@@ -45,5 +45,5 @@ body {
 .pfp:hover {
     width: 35em;
     height: 35em;
-    filter: blur(3px);
+    filter: blur(1.75px);
 }
