@@ -1,137 +1,30 @@
-onload = ()=> {
-  canvas = document.querySelector('canvas'),
-  context = canvas.getContext('2d');
-  if (!!context) {
-      /* if canvas is supported */
-  }
-};
+var $parent = document.createElement("div")
+    $gif = document.createElement("img")
+   ,$favicon = document.createElement("link")
 
-button = document.querySelector('button');
-button.addEventListener('click', function() { 
-    /* A variable to track the drawing intervals */
-    n = 0, 
-    /* Interval speed for the animation */
-    loadingInterval = setInterval(drawLoader, 60); 
-});
+// Required for CORS
+$gif.crossOrigin = "ahhhhh"
 
-/* Style of the lines of the square that'll be drawn */
-let gradient = context.createLinearGradient(0, 0, 32, 32);
-gradient.addColorStop(0, '#c7f0fe');
-gradient.addColorStop(1, '#56d3c9');
-context.strokeStyle = gradient;
-context.lineWidth = 8;
+$gif.src = "img/pfp.gif"
 
-function drawLoader() {
-  with(context) {
-    clearRect(0, 0, 32, 32);
-    beginPath();
-    /* Up to 25% */
-    if (n<=25){ 
-      /*
-        (0,0)-----(32,0)
-      */
-      // code to draw the top line, incrementally
-    }
-    /* Between 25 to 50 percent */
-    else if(n>25 && n<=50){ 
-      /*
-        (0,0)-----(32,0)
-                  |
-                  |
-                  (32,32)
-      */
-      // code to draw the top and right lines.
-    }
-    /* Between 50 to 75 percent */
-    else if(n>50 && n<= 75){ 
-      /*
-        (0,0)-----(32,0)
-                  |
-                  |
-        (0,32)----(32,32)
-      */
-      // code to draw the top, right and bottom lines.
-    }
-      /* Between 75 to 100 percent */
-    else if(n>75 && n<=100){
-      /*
-        (0,0)-----(32,0)
-            |      |
-            |      |
-        (0,32)----(32,32)
-      */
-      // code to draw all four lines of the square.
-    }
-    stroke();
-  }
-  // Convert the Canvas drawing to PNG and assign it to the favicon
-  favicon.href = canvas.toDataURL('image/png');
-  /* When finished drawing */
-  if (n === 100) {
-    clearInterval(loadingInterval);
-    return;
-  }
-  // Increment the variable used to keep track of the drawing intervals
-  n++;
-}
+$favicon.rel = "icon"
 
-function drawLoader() {
-  with(context) {
-    clearRect(0, 0, 32, 32);
-    beginPath();
-    /* Up to 25% of the time assigned to draw */
-    if (n<=25){ 
-      /*
-        (0,0)-----(32,0)
-      */
-      moveTo(0, 0); lineTo((32/25)*n, 0);
-    }
-    /* Between 25 to 50 percent */
-    else if(n>25 && n<=50){ 
-      /*
-        (0,0)-----(32,0)
-                  |
-                  |
-                  (32,32)
-      */
-      moveTo(0, 0); lineTo(32, 0);
-      moveTo(32, 0); lineTo(32, (32/25)*(n-25));
-    }
-    /* Between 50 to 75 percent */
-    else if(n>50 && n<= 75){ 
-      /*
-        (0,0)-----(32,0)
-                  |
-                  |
-        (0,32)----(32,32)
-      */
-      moveTo(0, 0); lineTo(32, 0);
-      moveTo(32, 0); lineTo(32, 32);
-      moveTo(32, 32); lineTo(-((32/25)*(n-75)), 32);
-    }
-      /* Between 75 to 100 percent */
-    else if(n>75 && n<=100){
-      /*
-        (0,0)-----(32,0)
-            |      |
-            |      |
-        (0,32)----(32,32)
-      */
-      moveTo(0, 0); lineTo(32, 0);
-      moveTo(32, 0); lineTo(32, 32);
-      moveTo(32, 32); lineTo(0, 32);
-      moveTo(0, 32); lineTo(0, -((32/25)*(n-100)));
-    }
-    stroke();
-  }
+// JS Fiddle always displays the result in an <iframe>,
+// so we have to add the favicon to the parent window
+window.parent.document.head.appendChild($favicon)
 
-  // Convert the Canvas drawing to PNG and assign it to the favicon
-  favicon.href = canvas.toDataURL('image/png');
-  /* When finished drawing */
-  if (n === 100) {
-      clearInterval(loadingInterval);
-      return;
-  }
-  // Increment the variable used to keep track of drawing intervals
-  n++;
+// libgif.js requires the GIF <img> tag to have a parent
+$parent.appendChild($gif)
+
+var supergif = new SuperGif({gif: $gif})
+   ,$canvas
+
+supergif.load(()=> {
+  $canvas = supergif.get_canvas()
+  updateFavicon()
+})
+
+function updateFavicon() {
+  $favicon.href = $canvas.toDataURL()
+  window.requestAnimationFrame(updateFavicon)
 }
